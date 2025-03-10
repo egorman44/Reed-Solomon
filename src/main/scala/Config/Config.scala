@@ -302,14 +302,14 @@ case class Config(
   //println(s"GENERATOR_POWER = $GENERATOR_POWER")
   //println(s"FCR_SYMB        = $FCR_SYMB")
   
-  def gfMult (symbA: UInt, symbB: UInt) : UInt = {
+  def gfMult (symbA: UInt, symbB: UInt, mtype : String = "default") : UInt = {
     val mult = Wire(UInt(SYMB_WIDTH.W))
     val alphaSum = Wire(UInt(SYMB_WIDTH.W))
     val alphaA = Wire(UInt(SYMB_WIDTH.W))
     val alphaB = Wire(UInt(SYMB_WIDTH.W))
     alphaA := symbToAlpha(symbA)
     alphaB := symbToAlpha(symbB)
-    alphaSum := (alphaA + alphaB) % FIELD_CHAR.U
+    alphaSum := RsUtil.modulo(alphaA + alphaB, FIELD_CHAR, mtype)
     when((symbA === 0.U) | (symbB === 0.U)){
       mult := 0.U
     }.otherwise{
