@@ -1,9 +1,46 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36" version="26.1.0">
   <diagram name="Page-1" id="wva9ApM2gxoNV7J-TSUx">
-    <mxGraphModel>
+    <mxGraphModel dx="1647" dy="873" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Ji3_sIbGNpSb8ydD5qQ0-4" target="Ji3_sIbGNpSb8ydD5qQ0-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Ji3_sIbGNpSb8ydD5qQ0-4" target="Ji3_sIbGNpSb8ydD5qQ0-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;startArrow=classic;startFill=1;endArrow=none;" edge="1" parent="1" source="Ji3_sIbGNpSb8ydD5qQ0-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="40" y="309.9655172413793" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-4" value="RsDecoder" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;endArrow=none;endFill=1;startArrow=classic;startFill=1;" edge="1" parent="1" source="Ji3_sIbGNpSb8ydD5qQ0-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-6" value="Fifo" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="170" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Ji3_sIbGNpSb8ydD5qQ0-8" target="Ji3_sIbGNpSb8ydD5qQ0-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-8" value="ErrorPositionShifter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-9" value="&lt;b&gt;errPosIf:&lt;/b&gt;&lt;div&gt;vecFfsif(c.T_LEN, c.SYMB_WIDTH)&lt;/div&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" connectable="0" vertex="1" parent="1">
+          <mxGeometry x="310.0033333333333" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-10" value="ErrorValueShifter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="410" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ji3_sIbGNpSb8ydD5qQ0-11" value="&lt;b style=&quot;text-align: center;&quot;&gt;errValIf:&lt;/b&gt;&lt;div style=&quot;text-align: center;&quot;&gt;vecFfsif(c.T_LEN, c.SYMB_WIDTH)&lt;/div&gt;" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" connectable="0" vertex="1" parent="1">
+          <mxGeometry x="240.0010344827583" y="460" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
