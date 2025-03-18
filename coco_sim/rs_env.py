@@ -27,7 +27,7 @@ from config import MSG_DURATION
 from config import SINGLE_CLOCK
 from config import AXIS_CLOCK
 from config import CORE_CLOCK
-
+import re
 class RsEnv():
     
     def __init__(self, dut):        
@@ -36,12 +36,21 @@ class RsEnv():
         self.comparators = []
         self.dut = dut
     
-    def build_env(self, s_if_containers, m_if_containers, flow_ctrl = 'always_on'):
+    def build_env(self, s_if_containers, m_if_containers, flow_ctrl):
         self.s_if_containers = s_if_containers
         self.m_if_containers = m_if_containers
+        match = re.fullmatch(r"fc_(\d+)_(\d+)", flow_ctrl)
+        if match:
+            tvalid_high_limit = int(match.group(1))
+            tvalid_low_limit = int(match.group(2))
+        else:
+            raise ValueError(f"Invalid flow control mode format: {fc_mode}. Expected format: 'fc_X_Y'.")
+
         for i in range (len(self.s_if_containers)):
             self.s_drivers.append(AxisDriver(name=f's_drv{i}',
-                                             axis_if=self.s_if_containers[i].if_ptr, flow_ctrl=flow_ctrl))
+                                             axis_if=self.s_if_containers[i].if_ptr,
+                                             tvalid_high_limit=tvalid_high_limit,
+                                             tvalid_low_limit=tvalid_low_limit))
         for i in range (len(self.m_if_containers)):
             self.comparators.append(Comparator(name=f'comp_{self.m_if_containers[i].if_name}'))
             

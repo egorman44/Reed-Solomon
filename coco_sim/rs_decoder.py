@@ -18,6 +18,7 @@ from rs_packets_builder import RsPacketsBuilder
 from rs_interface_builder import RsIfBuilder
 from rs_env import RsEnv
 from errors_builder import ErrorsBuilder
+from cocotb.regression import TestFactory
 
 class IfContainer():
 
@@ -49,6 +50,21 @@ def parse_command_line():
                       default=None,
                       help='Set run seed.'
                       )
+
+    args.add_argument("-f", "--flow_ctrl",
+                      dest="flow_ctrl",
+                      required=False,
+                      default='fc_1_0',
+                      help="Specify the flow control mode used by the AXIS generator. The format is 'fc_1_1', where the first digit represents the maximum number of cycles tvalid stays high, and the second digit represents the number of cycles tvalid stays low."
+                      )
+
+    args.add_argument("-d", "--delay",
+                      dest="delay",
+                      required=False,
+                      default=0,
+                      help="Specify the packet delay. Must be an integer or one of the following types: 'random', 'no_delay', 'short', 'medium'."
+                      )
+
     
     return args.parse_args()    
 
@@ -70,13 +86,7 @@ def build_and_run():
                 test_module='rs_decoder',
                 testcase=args.testcase,
                 )
-    
-if __name__ == "__main__":    
-    args = parse_command_line()
-    if args.seed:
-        os.environ["RANDOM_SEED"] = args.seed
-    build_and_run()
-        
+            
     
 
 '''
@@ -106,7 +116,10 @@ def get_if(top_level):
         raise ValueError(f"Not expected value for top_level = {top_level}")
     return s_if, m_if
 
-async def decoder_test(dut, error_type, pkt_num = 1, flow_ctrl='always_on', msg_pattern='random'):
+async def decoder_test(dut, error_type, pkt_num = 1, msg_pattern='random'):
+    
+    print(f"delay = {os.environ['DELAY']}")
+    print(f"flow_ctrl = {os.environ['FLOW_CTRL']}")
     
     s_if_containers = []
     m_if_containers = []
@@ -132,7 +145,7 @@ async def decoder_test(dut, error_type, pkt_num = 1, flow_ctrl='always_on', msg_
     for i in range(pkt_num):
         err_num = T_LEN
         err_pos, err_val = err_builder.generate_error(error_type)
-        pkt_builder.generate_msg(msg_pattern)
+        pkt_builder.generate_msg(msg_pattern, os.environ['DELAY'])
         pkt_builder.encode_msg()
         pkt_builder.corrupt_msg(err_pos, err_val)
         for i in range(len(s_if_containers)):
@@ -148,17 +161,13 @@ async def decoder_test(dut, error_type, pkt_num = 1, flow_ctrl='always_on', msg_
         
     # Build environment
     env = RsEnv(dut)
-    env.build_env(s_if_containers, m_if_containers, flow_ctrl)
+    env.build_env(s_if_containers, m_if_containers, os.environ['FLOW_CTRL'])
     await env.run()
     env.post_run()
     
 @cocotb.test()
 async def random_error_test(dut):
     await decoder_test(dut, 'random_error', 100)
-
-@cocotb.test()
-async def flow_cntr_enable_test(dut):
-    await decoder_test(dut, 'random_error', 25, 'flow_en')
     
 @cocotb.test()
 async def cover_all_errors_test(dut):
@@ -178,5 +187,15 @@ async def uncorrupted_msg_test(dut):
 
 @cocotb.test()
 async def incr_ptrn_test(dut):
-    await decoder_test(dut, 'random_error', 1,'always_on','increment')
+    await decoder_test(dut, 'random_error', 1,'increment')
 
+# Register test dynamically
+
+if __name__ == "__main__":    
+    args = parse_command_line()
+    if args.seed:
+        os.environ["RANDOM_SEED"] = args.seed
+    # Set argumets that are used in the test:
+    os.environ["DELAY"] = str(args.delay)
+    os.environ["FLOW_CTRL"] = str(args.flow_ctrl)
+    build_and_run()

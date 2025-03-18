@@ -38,19 +38,20 @@ class RsPacketsBuilder():
         self._builder['errPosOutIf'] = self.get_err_pos
         self._builder['mAxisIf']     = self.get_enc_msg
         
-    def generate_msg(self, msg_pattern='random'):
+    def generate_msg(self, msg_pattern='random', delay=0):
         if self._pkt_cntr is None:
             self._pkt_cntr = 0
         else:
             self._pkt_cntr += 1
         self.ref_msg = Packet(name=f'ref_msg{self._pkt_cntr}')
-        self.ref_msg.generate(pkt_size=self.K_LEN, pattern=msg_pattern, delay=0)
+        self.ref_msg.generate(pkt_size=self.K_LEN, pattern=msg_pattern, delay=delay)
         self.ref_msg.print_pkt()
         
     def encode_msg(self):
         enc_msg = list(rs_encode_msg(msg_in=self.ref_msg.data, fcr=self.FCR,nsym=self.REDUNDANCY))
         self.enc_msg = Packet(name=f'enc_msg{self._pkt_cntr}')
         self.enc_msg.write_data(enc_msg, delay=0)
+        self.enc_msg.delay = self.ref_msg.delay
         
     def corrupt_msg(self, err_pos, err_val=None):
         self.cor_msg = copy.deepcopy(self.enc_msg)
