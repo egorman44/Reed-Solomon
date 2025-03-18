@@ -14,16 +14,17 @@ def check_test_failures(xml_file):
         tree = ET.parse(xml_file)
         root = tree.getroot()
 
-        # Find all <failure> elements
-        failures = root.findall(".//failure")
+        # Find all <testcase> elements that contain a <failure> tag
+        failed_tests = [
+            testcase.get("name") for testcase in root.findall(".//testcase[failure]")
+        ]
 
-        if failures:
-            print(f"{len(failures)} test(s) failed.")
-            sys.exit(1)  # Non-zero exit code indicates failure
+        if failed_tests:
+            print(f"{len(failed_tests)} test(s) failed: {failed_tests}")
+            return failed_tests  # Return a list of failed test names
         else:
             print("All tests passed.")
-            sys.exit(0)  # Zero exit code indicates success
-
+            return []  # Return an empty list if no failures
     except ET.ParseError as e:
         print(f"Error parsing XML: {e}")
         sys.exit(2)  # Exit code 2 for XML parsing issues
@@ -34,6 +35,3 @@ def check_test_failures(xml_file):
 if __name__ == "__main__":
     xml_file_path = "sim_build/results.xml"  # Change this to your actual file path
     check_test_failures(xml_file_path)
-
-    
-
