@@ -9,7 +9,6 @@
  */
 
 // TODO: Check usage (_||_) vs (_|_)
-// TODO: rename symb-width > symb-width-bits and bus-width > bus-width-bytes
 package Rs
 
 import chisel3._

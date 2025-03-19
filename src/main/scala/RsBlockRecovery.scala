@@ -31,6 +31,7 @@ class RsBlockRecovery(c: Config) extends Module {
   rsDecoder.io.coreRst := io.coreRst.getOrElse(reset)
   
   val goodMsg = ~rsDecoder.io.msgCorrupted & rsDecoder.io.syndValid
+
   val startMsg = Wire(Bool())
 
   // store error positions and values in the queues.
@@ -57,17 +58,13 @@ class RsBlockRecovery(c: Config) extends Module {
   sQueue.io.enq.bits.tdata := io.sAxisIf.bits.tdata
   sQueue.io.enq.bits.tlast := io.sAxisIf.bits.tlast
 
-  
-  val correctMsg = startMsg & queueErrPos.io.deq.bits.ffs.orR
-
-  // dscQueue is used to store message description. Is it corrupted ot not 
-
   val cntr = RegInit(UInt((log2Ceil(c.BUS_WIDTH * c.MSG_DURATION)+1).W), 0.U)
   val mReady = RegInit(Bool(),false.B)
 
   sQueue.io.deq.ready := mReady
 
-  // Counter controlls READ operation from sQueue
+  // cntr keeps track positions of messages that reading out from the sQueue.
+  // It's used to correspond positions located in the errPosVec barrelShifter.
   when(startMsg) {
     cntr := c.BUS_WIDTH.U
     mReady := true.B
@@ -80,6 +77,7 @@ class RsBlockRecovery(c: Config) extends Module {
     }
   }
 
+  // startMsg is used to pop out the messages from sQueue, queueErrPos, queueErrVal FIFOs.
   // Read out the message when queueErrVal is not empty
   // and there is no reading operation.
   // B2B: during last cycle of block N check queueErrVal.io.deq.valid
@@ -95,6 +93,7 @@ class RsBlockRecovery(c: Config) extends Module {
   }
 
   // Shift position value is less than current cntr value
+  // Define the max 
   val LOOP_LIMIT = if(c.T_LEN < c.BUS_WIDTH) c.T_LEN else c.BUS_WIDTH
 
   val shiftEnableVec = Wire(Vec(LOOP_LIMIT, UInt(1.W)))
@@ -111,6 +110,9 @@ class RsBlockRecovery(c: Config) extends Module {
 
   dontTouch(ffsCountOnes)
 
+  // Load barrelShifters only if the errors were detected
+  val correctMsg = startMsg & queueErrPos.io.deq.bits.ffs.orR
+
   when(correctMsg) {
     errPosVec := (errPosVecRev.asUInt >> (c.SYMB_WIDTH.U * ffsCountOnes)).asTypeOf(Vec(c.T_LEN, UInt(c.SYMB_WIDTH.W)))
     errValVec := (errValVecRev.asUInt >> (c.SYMB_WIDTH.U * ffsCountOnes)).asTypeOf(Vec(c.T_LEN, UInt(c.SYMB_WIDTH.W)))
@@ -121,7 +123,8 @@ class RsBlockRecovery(c: Config) extends Module {
     errPosSel := errPosSel >> shiftVal
   }
 
-  // Shift enable
+  // Check if the error positions match the current message position that is reading out from sQueue.
+  // If matched then 
   for(i <- 0 until LOOP_LIMIT) {
     errPosAxis(i) := errPosVec(i) % c.BUS_WIDTH.U
     when(errPosVec(i) < cntr) {
