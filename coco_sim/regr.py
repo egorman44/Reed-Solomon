@@ -2,7 +2,7 @@ import subprocess
 from itertools import product
 from check_result import check_test_failures
 # Define parameter sets as tuples
-fc = ('fc_1_0', 'asd', 'fc_5_1', 'fc_1_5', 'fc_5_5')
+fc = ((1,0), (1,1), (5,1), (1,5) , (5,5))
 delay = ('0', 'short')
 pkt_num = (10, 50, 100)
 
@@ -20,7 +20,7 @@ with open(result_file, "w") as file:
 for combo in combinations:
     # Run the test with the given combination
     print(combo[1])
-    cmd = ["python3", "rs_decoder.py", "-l", "RsBlockRecovery", "-s", "1", "-f", combo[0] , "-d", combo[1] ]
+    cmd = ["python3", "rs_decoder.py", "-l", "RsBlockRecovery", "-s", "1", "-f", str(combo[0]) , "-d", combo[1], "-t", "min_max_test" ]
     subprocess.run(cmd)
 
     # Check test result (returns a list of failed test names or an empty list)

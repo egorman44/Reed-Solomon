@@ -19,15 +19,14 @@ from tb_utils import watchdog_set
 from tb_utils import assert_signal
 
 from scoreboard import Comparator
-from axis import AxisDriver
-from axis import AxisResponder
-from axis import AxisMonitor
+from axis import AxisDriver, AxisResponder, AxisMonitor, FlowCtrl
 
 from config import MSG_DURATION
 from config import SINGLE_CLOCK
 from config import AXIS_CLOCK
 from config import CORE_CLOCK
 import re
+
 class RsEnv():
     
     def __init__(self, dut):        
@@ -36,27 +35,22 @@ class RsEnv():
         self.comparators = []
         self.dut = dut
     
-    def build_env(self, s_if_containers, m_if_containers, flow_ctrl):
+    def build_env(self, s_if_containers, m_if_containers, flow_ctrl: FlowCtrl=FlowCtrl()):
         self.s_if_containers = s_if_containers
         self.m_if_containers = m_if_containers
-        match = re.fullmatch(r"fc_(\d+)_(\d+)", flow_ctrl)
-        if match:
-            tvalid_high_limit = int(match.group(1))
-            tvalid_low_limit = int(match.group(2))
-        else:
-            raise ValueError(f"Invalid flow control mode format: {fc_mode}. Expected format: 'fc_X_Y'.")
-
+        
         for i in range (len(self.s_if_containers)):
             self.s_drivers.append(AxisDriver(name=f's_drv{i}',
                                              axis_if=self.s_if_containers[i].if_ptr,
-                                             tvalid_high_limit=tvalid_high_limit,
-                                             tvalid_low_limit=tvalid_low_limit))
+                                             flow_ctrl = flow_ctrl
+                                             ))
         for i in range (len(self.m_if_containers)):
             self.comparators.append(Comparator(name=f'comp_{self.m_if_containers[i].if_name}'))
             
             self.m_monitors.append(AxisMonitor(name=f'm_mon_{self.m_if_containers[i].if_name}',
                                                axis_if=self.m_if_containers[i].if_ptr,
-                                               aport=self.comparators[i].port_out))
+                                               aport=self.comparators[i].port_out
+                                               ))
             
             self.comparators[i].port_prd = self.m_if_containers[i].if_packets.copy()
                     

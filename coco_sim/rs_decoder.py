@@ -19,6 +19,7 @@ from rs_interface_builder import RsIfBuilder
 from rs_env import RsEnv
 from errors_builder import ErrorsBuilder
 from cocotb.regression import TestFactory
+from axis import parse_flow_ctrl, FlowCtrl
 
 class IfContainer():
 
@@ -51,13 +52,12 @@ def parse_command_line():
                       help='Set run seed.'
                       )
 
-    args.add_argument("-f", "--flow_ctrl",
-                      dest="flow_ctrl",
+    args.add_argument("-f" , '--flow_ctrl', 
                       required=False,
-                      default='fc_1_0',
-                      help="Specify the flow control mode used by the AXIS generator. The format is 'fc_1_1', where the first digit represents the maximum number of cycles tvalid stays high, and the second digit represents the number of cycles tvalid stays low."
-                      )
-
+                      default='(1,0)',
+                      help="Tuple: --flow_ctrl '(3, 1)' or Dict: --flow_ctrl \"{'tvalid_high_limit': 5, 'tvalid_low_limit': 2}\" , where the first digit represents the maximum number of cycles tvalid stays high, and the second digit represents the number of cycles tvalid stays low."
+    )
+    
     args.add_argument("-d", "--delay",
                       dest="delay",
                       required=False,
@@ -120,6 +120,7 @@ async def decoder_test(dut, error_type, pkt_num = 1, msg_pattern='random'):
     
     print(f"delay = {os.environ['DELAY']}")
     print(f"flow_ctrl = {os.environ['FLOW_CTRL']}")
+    flow_ctrl = parse_flow_ctrl(os.environ['FLOW_CTRL'])
     
     s_if_containers = []
     m_if_containers = []
@@ -161,7 +162,7 @@ async def decoder_test(dut, error_type, pkt_num = 1, msg_pattern='random'):
         
     # Build environment
     env = RsEnv(dut)
-    env.build_env(s_if_containers, m_if_containers, os.environ['FLOW_CTRL'])
+    env.build_env(s_if_containers, m_if_containers, flow_ctrl)
     await env.run()
     env.post_run()
     
