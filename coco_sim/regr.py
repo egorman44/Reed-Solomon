@@ -20,7 +20,7 @@ with open(result_file, "w") as file:
 for combo in combinations:
     # Run the test with the given combination
     print(combo[1])
-    cmd = ["python3", "rs_decoder.py", "-l", "RsBlockRecovery", "-s", "1", "-f", str(combo[0]) , "-d", combo[1], "-t", "min_max_test" ]
+    cmd = ["python3", "rs_decoder.py", "-l", "RsBlockRecovery", "-s", "1", "-f", str(combo[0]) , "-d", combo[1]]
     subprocess.run(cmd)
 
     # Check test result (returns a list of failed test names or an empty list)
