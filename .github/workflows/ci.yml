@@ -14,7 +14,7 @@ jobs:
     
     strategy:
       matrix:
-        bus-width: [4, 8, 16, 32, 64, 128]
+        bus-width: [1, 4, 8, 32, 64, 128]
         
     steps:
     - name: Checkout repository
@@ -42,7 +42,7 @@ jobs:
     
     strategy:
       matrix:
-        bus-width: [4, 8, 16, 32, 64, 108]
+        bus-width: [1, 4, 8, 16, 32, 64, 108]
         
     steps:
     - name: Checkout repository
@@ -70,7 +70,7 @@ jobs:
     
     strategy:
       matrix:
-        bus-width: [4, 8, 16, 32, 64]
+        bus-width: [1, 4, 8, 16, 32, 64]
         
     steps:
     - name: Checkout repository

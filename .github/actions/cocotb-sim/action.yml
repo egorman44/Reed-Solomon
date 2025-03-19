@@ -38,10 +38,10 @@ runs:
       shell: bash
       working-directory: ./coco_sim
       run: |
-        python3 rs_decoder.py -l RsBlockRecovery
+        python3 rs_decoder.py regr.py
 
     - name: check result
       shell: bash
       working-directory: ./coco_sim
       run: |
-        python3 check_result.py
+        python3 regr_result.py
