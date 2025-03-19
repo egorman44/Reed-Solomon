@@ -38,7 +38,7 @@ runs:
       shell: bash
       working-directory: ./coco_sim
       run: |
-        python3 rs_decoder.py regr.py
+        python3 regr.py
 
     - name: check result
       shell: bash
