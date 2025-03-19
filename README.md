@@ -32,7 +32,7 @@ To build a Docker container image and run a container from it, use the following
 
 ```
 docker build -t chisel-flow .
-docker run -it -v <prj_folder>:/app -w /app chisel_flow
+docker run -it -v <prj_folder>:/app -w /app chisel-flow
 ```
 
 ## Generate Decoder
@@ -40,8 +40,8 @@ docker run -it -v <prj_folder>:/app -w /app chisel_flow
 To generate SystemVerilog files for the decoder, run the following commands:
 
 ```
-runMain Rs.GenRsBlockRecovery --axis-clock 156.25 --core-clock 156.25 --symb-width-in-bits 8 --bus-width-in-symb 8 --poly 285 --fcr 0 --n-len 255 --k-len 239
-runMain Rs.GenRsBlockRecovery --axis-clock 156.25 --core-clock 156.25 --symb-width-in-bits 8 --bus-width-in-symb 16 --poly 285 --fcr 0 --n-len 108 --k-len 106
+runMain Rs.GenRsBlockRecovery --symb-width-in-bits 8 --bus-width-in-symb 4 --poly 285 --fcr 0 --n-len 255 --k-len 239
+runMain Rs.GenRsBlockRecovery --symb-width-in-bits 8 --bus-width-in-symb 4 --poly 285 --fcr 0 --n-len 108 --k-len 106
 ```
 
 ## Run Cocotb Tests

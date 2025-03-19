@@ -3,6 +3,9 @@
 // test        "3.6.0"
 //////////////////////
 
+ThisBuild / fork := true
+ThisBuild / javaOptions += "-Xmx8G"
+
 val chiselVersion = "6.0.0"
 //val chiselVersion = "3.6.0"
 
