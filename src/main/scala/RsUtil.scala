@@ -1,5 +1,4 @@
 package Rs
-
 import chisel3._
 import chisel3.util.{MuxLookup, log2Ceil}
 

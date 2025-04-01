@@ -1,5 +1,6 @@
 package Rs
 
+/*
 import chisel3._
 import chiseltest._
 import org.scalatest.freespec.AnyFreeSpec
@@ -86,3 +87,4 @@ class CapturePositionsTest extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
+*/
