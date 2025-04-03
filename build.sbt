@@ -3,8 +3,8 @@
 // test        "3.6.0"
 //////////////////////
 
-//val chiselVersion = "6.0.0"
-val chiselVersion = "3.6.0"
+val chiselVersion = "6.0.0"
+//val chiselVersion = "3.6.0"
 
 if(chiselVersion == "6.0.0"){
   ThisBuild / scalaVersion     := "2.13.12"

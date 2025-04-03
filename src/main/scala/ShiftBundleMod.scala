@@ -64,6 +64,9 @@ class ShiftBundleMod[T <: Data](shiftUnit: T, width: Int, shiftVal: Int, interTe
       vldShift := vldShift >> 1
       for(i <- 0 until width-shiftVal)
         dataShift(i) := dataShift(i+shiftVal)
+      // Nullify begining of the shiftReg to clear up the pipe.
+      for(i <- width-shiftVal until width)
+        dataShift(i) := 0.U.asTypeOf(shiftUnit)
     }
 
     io.vecOut.valid := vldShift.asTypeOf(Vec(vldWidth, Bool())).reduce(_|_)
